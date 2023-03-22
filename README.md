@@ -18,6 +18,8 @@ We can interact with the API through HTTP requests from any language, via OpenAI
   python3 -m venv webcrawler
   cd webcrawler
   source bin/activate
+  >>>>> put “src” folder’s code into “webcrawler” folder
+  pip3 install -r requirements.txt
 
 Above code I install virtual environment and activate it. Please note, I use version 3.10 like “python3.10-venv” as my python version is 3.10. So, check your version and change the above command accordingly.
 
