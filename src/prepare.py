@@ -19,7 +19,7 @@ from openai.embeddings_utils import distances_from_embeddings, cosine_similarity
 openai.organization = 'intentionally-deleted'
 openai.api_key = 'intentionally-removed'
 
-domain = 'www.shahadathossain.com'
+domain = 'site4chatgptrnd.shahadathossain.com'
 
 ################################################################################
 ### Step 5
