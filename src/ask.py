@@ -23,7 +23,7 @@ openai.api_key = 'intentionally-removed'
 HTTP_URL_PATTERN = r'^http[s]*://.+'
 
 # Define root domain to crawl
-domain = "www.shahadathossain.com"
+domain = "site4chatgptrnd.shahadathossain.com"
 
 
 
