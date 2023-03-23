@@ -11,7 +11,7 @@ Before start to code we need to prepare ourself. Like we need a simple website t
 Another thing we need to do is to setup an OpenAI API Key by visiting https://platform.openai.com/docs/api-reference/introduction or https://platform.openai.com/account/api-keys [through your signed in account > API Keys link] Please note, you need to spend a small amount of money like $5.00 to get access of OpenAI for three months.
 
 We can interact with the API through HTTP requests from any language, via OpenAI’s official Python bindings, OpenAI’s official Node.js library, or a community-maintained library. I’m Python fan, so I’ll use Python bindings. To install the official Python bindings, run the following command:
-  '''
+  ```
   sudo apt update
   sudo apt upgrade
   sudo python3 -m pip install --upgrade pip
@@ -19,9 +19,9 @@ We can interact with the API through HTTP requests from any language, via OpenAI
   python3 -m venv webcrawler
   cd webcrawler
   source bin/activate
-  > put “src” folder’s code into “webcrawler” folder
+  >> put “src” folder’s code into “webcrawler” folder
   pip3 install -r requirements.txt
-  '''
+  ```
 
 Above code I install virtual environment and activate it. Please note, I use version 3.10 like “python3.10-venv” as my python version is 3.10. So, check your version and change the above command accordingly.
 
