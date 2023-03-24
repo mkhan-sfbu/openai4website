@@ -6,7 +6,7 @@ So we have three part of our program, they are -
 2. Prepare: to prepare those data ans save the prepared data as processed data to use in future
 3. Ask: to get answer of user’s question
 
-I marge 1 & 2 into one file and quirying OpenAI into 3rd file. We will use docker to package our python program. So, we can easily maintain our program.
+I merged 1 & 2 into one file and quirying OpenAI into 3rd file. We will use docker to package our python program. So, we can easily maintain our program.
 
 Before start to code we need to prepare ourself. Like we need a simple website that we are going to crawl. I prepared a website for this purpose and host it into my personal server. Please note, the prescribed Python program from OpenAI use HTTPS to crawl. So, I host that under my HTTPS enabled server which is https://site4chatgptrnd.shahadathossain.com/ the source code of this website I put into “public_html” folder of my github repository.
 
