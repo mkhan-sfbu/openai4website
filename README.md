@@ -6,23 +6,18 @@ So we have three part of our program, they are -
 2. Prepare: to prepare those data ans save the prepared data as processed data to use in future
 3. Ask: to get answer of user’s question
 
-Before start to code we need to prepare ourself. Like we need a simple website that we are going to crawl. I prepared a website for this purpose and host it into my personal server. Please note, the prescribed Python program from OpenAI use HTTPS to crawl. So, I host that under my HTTPS enabled server which is https://site4chatgptrnd.shahadathossain.com/ the source code of this website I put into “website2crawl” folder of my github repository. Please find github repository link at the end of this document.
+I marge 1 & 2 into one file and quirying OpenAI into 3rd file. We will use docker to package our python program. So, we can easily maintain our program.
+
+Before start to code we need to prepare ourself. Like we need a simple website that we are going to crawl. I prepared a website for this purpose and host it into my personal server. Please note, the prescribed Python program from OpenAI use HTTPS to crawl. So, I host that under my HTTPS enabled server which is https://site4chatgptrnd.shahadathossain.com/ the source code of this website I put into “public_html” folder of my github repository. Please find github repository link at the end of this document.
 
 Another thing we need to do is to setup an OpenAI API Key by visiting https://platform.openai.com/docs/api-reference/introduction or https://platform.openai.com/account/api-keys [through your signed in account > API Keys link] Please note, you need to spend a small amount of money like $5.00 to get access of OpenAI for three months.
 
-We can interact with the API through HTTP requests from any language, via OpenAI’s official Python bindings, OpenAI’s official Node.js library, or a community-maintained library. I’m Python fan, so I’ll use Python bindings. To install the official Python bindings, run the following command:
-  ```
-  sudo apt update
-  sudo apt upgrade
-  sudo python3 -m pip install --upgrade pip
-  sudo apt install python3-pip python3-setuptools python3.x-venv
-  python3 -m venv webcrawler
-  cd webcrawler
-  source bin/activate
-  >> put “src” folder’s code into “webcrawler” folder
-  pip3 install -r requirements.txt
-  ```
+We can interact with the API through HTTP requests from any language, via OpenAI’s official Python bindings, OpenAI’s official Node.js library, or a community-maintained library. I’m Python fan, so I’ll use Python bindings. As I packaged into docker, so "Docker" file take care installation / setup process. To run build docker and run docker you can use these code -
+```
+docker build -t openai2test .
+sudo docker run -d --network=host openai2test:latest
+```
 
-Above code I install virtual environment and activate it. Please note, I use version 3.10 like “python3.10-venv” as my python version is 3.10. So, check your version and change the above command accordingly.
+As I told we need another server for static content from which our chat program answer the query of our user. I use here apache server with PHP. User ask question to PHP through Apache server and PHP communicate with underlaying Python server which is run by docker and send response to end user through Apache server. Our PHP code and static website hosted under "public_html" file.
 
-Now we are ready to run prescribed code of OpenAI. First we execute “crawl.py” to crawl our website to get data and then “prepare.py” to prepare our data for OpenAI and finally execute “ask.py” where user can ask question.
+Now we are ready to run prescribed code of OpenAI. We already build and execute our docker and it will communicate through 50024 port at localhost.
