@@ -21,3 +21,5 @@ sudo docker run -d --network=host openai2test:latest
 As I told we need another server for static content from which our chat program answer the query of our user. I use here apache server with PHP. User ask question to PHP through Apache server and PHP communicate with underlaying Python server which is run by docker and send response to end user through Apache server. Our PHP code and static website hosted under "public_html" file.
 
 Now we are ready to run prescribed code of OpenAI. We already build and execute our docker and it will communicate through 50024 port at localhost.
+
+## Demo https://site4chatgptrnd.shahadathossain.com/
