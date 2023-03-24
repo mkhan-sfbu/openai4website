@@ -14,7 +14,7 @@ Another thing we need to do is to setup an OpenAI API Key by visiting https://pl
 
 We can interact with the API through HTTP requests from any language, via OpenAI’s official Python bindings, OpenAI’s official Node.js library, or a community-maintained library. I’m Python fan, so I’ll use Python bindings. As I packaged into docker, so "Docker" file take care installation / setup process. To run build docker and run docker you can use these code -
 ```
-docker build -t openai2test .
+sudo docker build -t openai2test .
 sudo docker run -d --network=host openai2test:latest
 ```
 
