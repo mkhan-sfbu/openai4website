@@ -24,7 +24,7 @@ openai.api_key = ''
 HTTP_URL_PATTERN = r'^http[s]*://.+'
 
 # Define root domain to crawl
-domain = "yahoo.shkr.local"
+domain = 'site4chatgptrnd.shahadathossain.com'
 
 
 
