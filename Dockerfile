@@ -5,11 +5,10 @@ RUN pip install --upgrade pip
 RUN pip install setuptools
 RUN pip install -U setuptools
 RUN pip install -r requirements.txt
-ARG OPENAI_KEY=xxx
-ARG SERVER_HOST=python.site4chatgptrnd.shahadathossain.com
-ARG SERVER_PORT=59014
-#ARG CRAWL_DOMAIN=python.site4chatgptrnd.shahadathossain.com
-ARG CRAWL_ROOT=
+ARG OPENAI_KEY=null
+ARG SERVER_HOST=null
+ARG SERVER_PORT=null
+ARG CRAWL_ROOT=null
 COPY pure-python-version/ /code/
 RUN ls -la /code/*
 RUN touch /code/env.txt

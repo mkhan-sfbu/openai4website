@@ -17,7 +17,7 @@ need2write=False
 
 
 def getConfigDataChange(cnfg, enData, envKey, cnfgRootKey, cnfgDataKey):
-    if envKey in enData:
+    if envKey in enData and enData[envKey]!='null':
         return getConfigAfterChangingData(cnfg, enData[envKey], cnfgRootKey, cnfgDataKey)
     return [False, {}]
 
