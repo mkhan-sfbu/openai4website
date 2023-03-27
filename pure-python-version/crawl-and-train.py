@@ -15,16 +15,28 @@ import tiktoken
 import openai
 import numpy as np
 from openai.embeddings_utils import distances_from_embeddings, cosine_similarity
+from settings import config
 
-openai.organization = ''
-openai.api_key = ''
+
+cnfg = config()
+
+openai.organization = cnfg['openai']['org']
+openai.api_key = cnfg['openai']['key']
 
 # Regex pattern to match a URL
 HTTP_URL_PATTERN = r'^http[s]*://.+'
 
 # Define root domain to crawl
-domain = 'site4chatgptrnd.shahadathossain.com'
-full_url = "https://site4chatgptrnd.shahadathossain.com/"
+# domain = 'site4chatgptrnd.shahadathossain.com'
+full_url = 'https://'+cnfg['server']['host']+':'+str(cnfg['server']['port'])+'/'
+if 'crawl' in cnfg:
+    if 'root' in cnfg['crawl']:
+        full_url = cnfg['crawl']['root']
+    else:
+        if 'domain' in cnfg['crawl']:
+            full_url = 'https://'+cnfg['crawl']['domain']+'/'
+
+
 
 # Create a class to parse the HTML and get the hyperlinks
 class HyperlinkParser(HTMLParser):
@@ -110,6 +122,7 @@ def get_domain_hyperlinks(local_domain, url):
 def crawl(url):
     # Parse the URL and get the domain
     local_domain = urlparse(url).netloc
+    print("local_domain: "+local_domain)
 
     # Create a queue to store the URLs to crawl
     queue = deque([url])
@@ -158,7 +171,7 @@ def crawl(url):
                 seen.add(link)
 
 crawl(full_url)
-
+domain = urlparse(full_url).netloc
 
 
 

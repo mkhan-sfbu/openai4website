@@ -1,50 +1,4 @@
-<?php
-
-function APIcall($url, $method, $data) {
-  $curl = curl_init();
-   
-  switch ($method) {
-      case "POST":
-          curl_setopt($curl, CURLOPT_POST, 1);
-          if ($data)
-              curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-          break;
-      /* case "PUT":
-          curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
-          if ($data)
-              curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-          break; */
-  }
-  
-  curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($curl, CURLOPT_URL, $url);
-  /* curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-      'APIKEY: RegisteredAPIkey',
-      'Content-Type: application/json',
-  )); */
-  #curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-  $result = curl_exec($curl);
-   
-  if(!$result) {
-      throw new \Exception("Connection failure!");
-  }
-  curl_close($curl);
-  return json_decode($result, true);
-}
-function getResponse($response_code, $response_desc, $additionalData=[]){
-  $response['code'] = $response_code;
-  $response['message'] = $response_desc;
-  $response['data']=$additionalData;
-  return json_encode($response);
-}
-if($_POST && array_key_exists('question', $_POST)){
-  header("Content-Type:application/json");
-  ##die(APIcall('http://localhost:50024/', 'POST', ['question'=>$_POST['question']]));
-  print(getResponse(200, 'Found Answer!', APIcall('http://localhost:50024/', 'POST', ['question'=>$_POST['question']])));
-  exit();
-}
-?><html>
+<html>
 <head><title>Yahoo Local Site</title>
 	<style type="text/css">
     body {
@@ -157,14 +111,14 @@ function sendMessage(e) {
   $('.message-form__button').prop( "disabled", true );
   addQuestionToListDOM(value)
   $.get({
-    url: "index.php",
+    url: "/",
     data: { 
         "question": value
     },
     cache: false,
     type: "POST",
     success: function(response) {
-      addAnswerToListDOM(response.data.answer)
+      addAnswerToListDOM(response.answer)
       $('.message-form__input').val('');
       $('.message-form__input').prop( "disabled", false );
       $('.message-form__button').prop( "disabled", false );
@@ -207,7 +161,7 @@ function addMessageToListDOM(text, type) {
 	<tbody>
 		<tr>
 			<td><a href="/" rel="home">Yahoo Local SHKR</a></td>
-			<td style="text-align:right"><a href="overview.htm">Overview</a> | <a href="criticism.htm">Criticism</a> | <a href="history.htm">History</a> | <a href="products-services.htm">Products and services</a></td>
+			<td style="text-align:right"><a href="overview">Overview</a> | <a href="criticism">Criticism</a> | <a href="history">History</a> | <a href="products-services">Products and services</a></td>
 		</tr>
 	</tbody>
 </table>

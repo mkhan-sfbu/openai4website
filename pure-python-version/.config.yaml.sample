@@ -1,0 +1,10 @@
+openai:
+  key: ""
+  org: ""
+
+server:
+  host: "python.site4chatgptrnd.shahadathossain.com"
+  port: 59014
+
+crawl:
+  root: "https://site4chatgptrnd.shahadathossain.com/"

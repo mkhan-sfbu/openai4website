@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, json
+from flask import Flask, request, jsonify, json, render_template, send_from_directory
 ################################################################################
 ### Step 1
 ################################################################################
@@ -17,25 +17,32 @@ import openai
 import numpy as np
 from openai.embeddings_utils import distances_from_embeddings, cosine_similarity
 
-openai.organization = ''
-openai.api_key = ''
+import ssl
+from settings import config
+
+
+cnfg = config()
+
+openai.organization = cnfg['openai']['org']
+openai.api_key = cnfg['openai']['key']
 
 # Regex pattern to match a URL
 HTTP_URL_PATTERN = r'^http[s]*://.+'
 
 # Define root domain to crawl
-domain = 'site4chatgptrnd.shahadathossain.com'
+# domain = 'site4chatgptrnd.shahadathossain.com'
+# domain = cnfg['crawl']['domain']
 
 
 
 ################################################################################
 ### Step 11
 ################################################################################
-
-df=pd.read_csv('processed/embeddings.csv', index_col=0)
-df['embeddings'] = df['embeddings'].apply(eval).apply(np.array)
-
-df.head()
+def getDf():
+    df=pd.read_csv('processed/embeddings.csv', index_col=0)
+    df['embeddings'] = df['embeddings'].apply(eval).apply(np.array)
+    df.head()
+    return df
 
 ################################################################################
 ### Step 12
@@ -142,33 +149,54 @@ print('........... thank you ...........')
 ####################################################################
 ### Stemp 14
 ################################################################
+ctx = ssl.SSLContext(ssl.PROTOCOL_TLS)
+ctx.load_verify_locations('ssl-certificates/fullchain.pem')
+ctx.load_cert_chain('ssl-certificates/cert.pem', 'ssl-certificates/privkey.pem')
+
 # Define the server address and port
-host = 'localhost'
-port = 50024 # 500AI
+host = cnfg['server']['host']
+port = cnfg['server']['port'] # 500AI
 print(f"Serving at http://{host}:{port}")
 
-app = Flask(__name__)
-@app.route('/', methods=['POST'])
+app = Flask(__name__, template_folder='templates')
+@app.route('/', methods=['POST', 'GET'])
 def responseToQuestion():
     response = {
             'status': 400
         }
     if request.method == 'POST':
-        data=request.get_json()
+        data=request.form
         if data.get("question") == "":
             return jsonify(response)
         response = {
             'question': data.get("question"),
-            'answer': answer_question(df, question=data.get("question")),
+            'answer': answer_question(getDf(), question=data.get("question")),
             'status': 200
         }
-        # '''
+    if request.method == 'GET':
+        return render_template('index.htm')
+
     
     # Return the response as JSON
     return jsonify(response)
 
+@app.route('/<string:htmlfile>', methods=['GET'])
+def sendContent(htmlfile):
+    response = {
+            'status': 400
+        }
+    if request.method == 'GET':
+        return render_template(htmlfile+'.htm')
+    # Return the response as JSON
+    return jsonify(response)
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
 # Start the Flask app
 if __name__ == '__main__':
-    app.run(port=port, host=host)
+    app.run(port=port, host=host, ssl_context=ctx)
 
 
