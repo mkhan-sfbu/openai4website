@@ -16,7 +16,7 @@ $ sudo certbot certonly --standalone -d python.site4chatgptrnd.shahadathossain.c
 ```
 Note: Before execute above code we need to ensure that 80 and 443 port is not bind with the domain.
 
-When it run successfully, it provide all necessary certificate files. In my server the location of those files was “/etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/” Now, we need to copy “cert.pem”, “” and “” into our “<project-root>/ssl-certificates/” directory. To do this, we can apply following commands -
+When it run successfully, it provide all necessary certificate files. In my server the location of those files was “/etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/” Now, we need to copy “cert.pem”, “fullchain.pem” and “privkey.pem” into our “<project-root>/ssl-certificates/” directory. To do this, we can apply following commands -
 ```
 $ sudo cp /etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/fullchain.pem pure-python-version/ssl-certificates/
 $ sudo cp /etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/cert.pem pure-python-version/ssl-certificates/
