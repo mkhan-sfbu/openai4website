@@ -18,12 +18,14 @@ import numpy as np
 from openai.embeddings_utils import distances_from_embeddings, cosine_similarity
 
 import ssl
-from settings import config
+from settings import config, toConfig, getConfigAfterChangingData
+import sys
 
 
 cnfg = config()
 
-openai.organization = cnfg['openai']['org']
+if 'org' in cnfg['openai']:
+    openai.organization = cnfg['openai']['org']
 openai.api_key = cnfg['openai']['key']
 
 # Regex pattern to match a URL
@@ -156,7 +158,7 @@ ctx.load_cert_chain('ssl-certificates/cert.pem', 'ssl-certificates/privkey.pem')
 # Define the server address and port
 host = cnfg['server']['host']
 port = cnfg['server']['port'] # 500AI
-print(f"Serving at http://{host}:{port}")
+print(f"Serving at https://{host}:{port}")
 
 app = Flask(__name__, template_folder='templates')
 @app.route('/', methods=['POST', 'GET'])
@@ -197,6 +199,18 @@ def favicon():
 
 # Start the Flask app
 if __name__ == '__main__':
+    '''
+    print(f"Arguments count: {len(sys.argv)}")
+    for i, arg in enumerate(sys.argv):
+        print(f"Argument {i:>1}: {arg}")
+    '''
+    if len(sys.argv)>1 and int(sys.argv[1])>0 and port!=int(sys.argv[1]):
+        port=int(sys.argv[1])
+        nData=getConfigAfterChangingData(cnfg, port, 'server', 'port')
+        if nData[0]==True:
+            print('New port: '+str(port))
+            toConfig(nData[1])
+            print('Port update into config file - DONE')
     app.run(port=port, host=host, ssl_context=ctx)
 
 

@@ -20,7 +20,8 @@ from settings import config
 
 cnfg = config()
 
-openai.organization = cnfg['openai']['org']
+if 'org' in cnfg['openai']:
+    openai.organization = cnfg['openai']['org']
 openai.api_key = cnfg['openai']['key']
 
 # Regex pattern to match a URL
@@ -33,7 +34,7 @@ if 'crawl' in cnfg:
     if 'root' in cnfg['crawl']:
         full_url = cnfg['crawl']['root']
     else:
-        if 'domain' in cnfg['crawl']:
+        if 'domain' in cnfg['crawl'] and len(cnfg['crawl']['domain'])>0:
             full_url = 'https://'+cnfg['crawl']['domain']+'/'
 
 

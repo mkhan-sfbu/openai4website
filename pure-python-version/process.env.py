@@ -1,4 +1,4 @@
-from settings import config, toConfig
+from settings import config, toConfig, getConfigAfterChangingData
 cnfg = config()
 
 envFile=open('env.txt', 'r')
@@ -14,60 +14,37 @@ for line in lines:
 
 need2write=False
 
-def changeConfigData(cnfg, envKey, cnfgRootKey, cnfgDataKey):
-    need2write=False
+
+
+def getConfigDataChange(cnfg, enData, envKey, cnfgRootKey, cnfgDataKey):
     if envKey in enData:
-        if len(enData[envKey])>0:
-            if cnfgRootKey not in cnfg:
-                need2write=True
-                cnfg[cnfgRootKey]={}
-            if cnfgDataKey not in cnfg[cnfgRootKey]:
-                need2write=True
-                cnfg[cnfgRootKey][cnfgDataKey]=enData[envKey]
-            else:
-                if isinstance(cnfg[cnfgRootKey][cnfgDataKey], str) or  isinstance(cnfg[cnfgRootKey][cnfgDataKey], int):
-                    need2write=True
-                    cnfg[cnfgRootKey][cnfgDataKey]=enData[envKey]
-                    if isinstance(cnfg[cnfgRootKey][cnfgDataKey], int):
-                        cnfg[cnfgRootKey][cnfgDataKey]=int(enData[envKey])
-                else:
-                    raise Exception("Trying to set string / integer configuration value into a predefined array value, check configuraion YAML file for '"+cnfgRootKey+"' >> '"+cnfgDataKey+"'")
-        else:
-            if cnfgRootKey in cnfg and cnfgDataKey in cnfg[cnfgRootKey]:
-                if isinstance(cnfg[cnfgRootKey][cnfgDataKey], str):
-                    need2write=True
-                    nData={}
-                    for dk in cnfg[cnfgRootKey].keys():
-                        if dk!=cnfgDataKey: nData[dk]=cnfg[cnfgRootKey][dk]
-                    if len(nData)>0:
-                        cnfg[cnfgRootKey]=nData
-                    else:
-                        nCnfg={}
-                        for dk in cnfg.keys():
-                            if dk!=cnfgRootKey: nCnfg[dk]=cnfg[dk]
-                        cnfg=nCnfg
-                else:
-                    raise Exception("Trying to remote string configuration value from a predefined array value, check configuraion YAML file for '"+cnfgRootKey+"' >> '"+cnfgDataKey+"'")
-    return [need2write, cnfg]
+        return getConfigAfterChangingData(cnfg, enData[envKey], cnfgRootKey, cnfgDataKey)
+    return [False, {}]
 
 
-nData=changeConfigData(cnfg, 'OPENAI_KEY', 'openai', 'key')
+nData=getConfigDataChange(cnfg, enData, 'OPENAI_KEY', 'openai', 'key')
 if nData[0]==True:
     need2write=True
     cnfg=nData[1]
-nData=changeConfigData(cnfg, 'SERVER_HOST', 'server', 'host')
+nData=getConfigDataChange(cnfg, enData, 'SERVER_HOST', 'server', 'host')
 if nData[0]==True:
     need2write=True
     cnfg=nData[1]
-nData=changeConfigData(cnfg, 'SERVER_PORT', 'server', 'port')
+nData=getConfigDataChange(cnfg, enData, 'SERVER_PORT', 'server', 'port')
 if nData[0]==True:
     need2write=True
     cnfg=nData[1]
-nData=changeConfigData(cnfg, 'CRAWL_DOMAIN', 'crawl', 'domain')
+nData=getConfigDataChange(cnfg, enData, 'CRAWL_ROOT', 'crawl', 'root')
 if nData[0]==True:
     need2write=True
     cnfg=nData[1]
-nData=changeConfigData(cnfg, 'CRAWL_ROOT', 'crawl', 'root')
+'''
+nData=getConfigDataChange(cnfg, enData, 'CRAWL_DOMAIN', 'crawl', 'domain')
+if nData[0]==True:
+    need2write=True
+    cnfg=nData[1]
+'''
+
 
 if True==need2write:
     toConfig(cnfg)
