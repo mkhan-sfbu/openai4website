@@ -54,4 +54,4 @@ $ sudo docker exec -it openaiusingpurepython_container python ./crawl-and-train.
 ```
 Now we are ready to run see the result! We already build and execute our docker and it will communicate through 59014 port.
 
-## Demo https://site4chatgptrnd.shahadathossain.com/
+## Demo https://python.site4chatgptrnd.shahadathossain.com:59014/
