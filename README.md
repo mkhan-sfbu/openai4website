@@ -8,8 +8,8 @@ To achieve this, we need to train OpenAI with our website data. So, are going to
 
 I marge 1 & 2 into one file and quirying OpenAI into 3rd file. We will use docker to package our python program. So, we can easily maintain our program. To dockerize our program we need to follow these steps -
 
-1. Install docker
-2. Create our docker file where necessary steps will written, so docker will read that file and execute that file sequentially.
+1. Install docker (it’s one time task, if docker installed into system, we can ignore this step)
+2. Create our docker file where necessary steps will written, so docker will read that file and execute that file sequentially while building our image.
 3. Create a requirement file for the project which already prescribed by OpenAI. I add some more module like Flask and other for extra work at the end of file.
 4. Build our image by “docker build” command (I’ll write full command to build image later of this document)
 5. Run or execute our newly created image (this command also documented here, later)
