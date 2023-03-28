@@ -6,9 +6,15 @@ To achieve this, we need to train OpenAI with our website data. So, are going to
 2. Prepare: to prepare those data ans save the prepared data as processed data to use in future
 3. Ask: to get answer of user’s question
 
-I marge 1 & 2 into one file and quirying OpenAI into 3rd file. We will use docker to package our python program. So, we can easily maintain our program.
+I marge 1 & 2 into one file and quirying OpenAI into 3rd file. We will use docker to package our python program. So, we can easily maintain our program. To dockerize our program we need to follow these steps -
 
-Also we need to prepare our static website from which OpenAI will find the answer. For this purpose I create a static site and host it with this project.
+1. Install docker
+2. Create our docker file where necessary steps will written, so docker will read that file and execute that file sequentially.
+3. Create a requirement file for the project which already prescribed by OpenAI. I add some more module like Flask and other for extra work at the end of file.
+4. Build our image by “docker build” command (I’ll write full command to build image later of this document)
+5. Run or execute our newly created image (this command also documented here, later)
+
+Also we need to prepare our static website from which OpenAI will find the answer. For this purpose I create a static site and host it with this project. So, we first need to execute this project and we will get that static site. After that we will execute our training code, so that training code will get our static site. So, we will run our program first, then execute program to train, then we can ask question.
 
 For this project we have another challenge, we use HTTPS while crawling. So, I need to host it with SSL. Here I use Let’s encrypt free SSL to achieve this. As we using micro-server, we need “standalone” SSL.
 ```
@@ -16,7 +22,7 @@ $ sudo certbot certonly --standalone -d python.site4chatgptrnd.shahadathossain.c
 ```
 Note: Before execute above code we need to ensure that 80 and 443 port is not bind with the domain.
 
-When it run successfully, it provide all necessary certificate files. In my server the location of those files was “/etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/” Now, we need to copy “cert.pem”, “fullchain.pem” and “privkey.pem” into our “<project-root>/ssl-certificates/” directory. To do this, we can apply following commands -
+When it run successfully, it provide all necessary certificate files. In my server the location of those files was “/etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/” Now, we need to copy “cert.pem”, “privkey.pem” and “fullchain.pem” into our “<project-root>/ssl-certificates/” directory. To do this, we can apply following commands -
 ```
 $ sudo cp /etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/fullchain.pem pure-python-version/ssl-certificates/
 $ sudo cp /etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/cert.pem pure-python-version/ssl-certificates/
@@ -28,7 +34,7 @@ As we encapsulate our code into Docker, our challenge is how we point the certif
 
 Another thing we need to do is to setup an OpenAI API Key by visiting https://platform.openai.com/docs/api-reference/introduction or https://platform.openai.com/account/api-keys [through your signed in account > API Keys link] Please note, you need to spend a small amount of money like $5.00 to get access of OpenAI for three months.
 
-We can interact with the API through HTTP requests from any language, via OpenAI’s official Python bindings, OpenAI’s official Node.js library, or a community-maintained library. I’m Python fan, so I’ll use Python bindings. As I packaged into docker, so "Docker" file take care installation / setup process.
+We can interact with the API through HTTP requests from any language, via OpenAI’s official Python bindings, OpenAI’s official Node.js library, or a community-maintained library. I’m Python fan, so I’ll use Python bindings. As I packaged into docker, so "Docker" file take care installation / setup process. I just add a line into “Docker” file that we are going to use python with version. So docker will download python image from internet and embed that python into our project.
 
 In Docker build there has several argument we can pass while building image that help to configure our required data like API key, server host and port etc.
 
