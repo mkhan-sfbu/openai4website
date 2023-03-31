@@ -3,8 +3,8 @@ openai:
   org: ""
 
 server:
-  host: "python.site4chatgptrnd.shahadathossain.com"
+  host: "site4chatgptrnd.shahadathossain.com"
   port: 59014
 
 crawl:
-  root: "https://site4chatgptrnd.shahadathossain.com/"
+  root: "https://site4chatgptrnd.shahadathossain.com:59014/"
