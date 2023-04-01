@@ -34,6 +34,10 @@ nData=getConfigDataChange(cnfg, enData, 'SERVER_PORT', 'server', 'port')
 if nData[0]==True:
     need2write=True
     cnfg=nData[1]
+nData=getConfigDataChange(cnfg, enData, 'SERVER_SSL', 'server', 'ssl')
+if nData[0]==True:
+    need2write=True
+    cnfg=nData[1]
 nData=getConfigDataChange(cnfg, enData, 'CRAWL_ROOT', 'crawl', 'root')
 if nData[0]==True:
     need2write=True

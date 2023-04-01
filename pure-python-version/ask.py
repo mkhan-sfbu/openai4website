@@ -151,14 +151,18 @@ print('........... thank you ...........')
 ####################################################################
 ### Stemp 14
 ################################################################
-ctx = ssl.SSLContext(ssl.PROTOCOL_TLS)
-ctx.load_verify_locations('ssl-certificates/fullchain.pem')
-ctx.load_cert_chain('ssl-certificates/cert.pem', 'ssl-certificates/privkey.pem')
-
 # Define the server address and port
 host = cnfg['server']['host']
 port = cnfg['server']['port'] # 500AI
-print(f"Serving at https://{host}:{port}")
+isSsl = (True if 1==cnfg['server']['ssl'] else False) # true
+
+if True==isSsl:
+    ctx = ssl.SSLContext(ssl.PROTOCOL_TLS)
+    ctx.load_verify_locations('ssl-certificates/fullchain.pem')
+    ctx.load_cert_chain('ssl-certificates/cert.pem', 'ssl-certificates/privkey.pem')
+
+
+print(f"Serving at "+("https" if True==isSsl else "http")+"://{host}:{port}")
 
 app = Flask(__name__, template_folder='templates')
 @app.route('/', methods=['POST', 'GET'])
@@ -211,6 +215,9 @@ if __name__ == '__main__':
             print('New port: '+str(port))
             toConfig(nData[1])
             print('Port update into config file - DONE')
-    app.run(port=port, host=host, ssl_context=ctx)
+    if True==isSsl:
+        app.run(port=port, host=host, ssl_context=ctx)
+    else:
+        app.run(port=port, host=host)
 
 

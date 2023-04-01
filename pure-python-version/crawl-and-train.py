@@ -229,7 +229,7 @@ df.columns = ['title', 'text']
 df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
 
 # Visualize the distribution of the number of tokens per row using a histogram
-df.n_tokens.hist()
+#df.n_tokens.hist()
 
 ################################################################################
 ### Step 8
@@ -300,7 +300,7 @@ for row in df.iterrows():
 
 df = pd.DataFrame(shortened, columns = ['text'])
 df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
-df.n_tokens.hist()
+#df.n_tokens.hist()
 
 ################################################################################
 ### Step 10
@@ -308,8 +308,15 @@ df.n_tokens.hist()
 
 # Note that you may run into rate limit issues depending on how many files you try to embed
 # Please check out our rate limit guide to learn more on how to handle this: https://platform.openai.com/docs/guides/rate-limits
+model_engine = "text-embedding-ada-002"
+def create_embedding(text):
+    encoded_text = text.encode('utf-8')
+    return openai.Embedding.create(model=model_engine, inputs=encoded_text)['data'][0]['embedding']
 
-df['embeddings'] = df.text.apply(lambda x: openai.Embedding.create(input=x, engine='text-embedding-ada-002')['data'][0]['embedding'])
+# value_when_true if condition else value_when_false
+# x if x is None else x.encode('utf-8')
+# ''.join(char for char in urlData if ord(char) < 128)
+df['embeddings'] = df.text.apply(lambda x: openai.Embedding.create(input=(x if x is None else x.encode('utf-8').decode()), engine='text-embedding-ada-002')['data'][0]['embedding'])
 df.to_csv('processed/embeddings.csv')
 df.head()
 

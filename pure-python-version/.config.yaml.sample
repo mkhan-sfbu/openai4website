@@ -5,6 +5,7 @@ openai:
 server:
   host: "site4chatgptrnd.shahadathossain.com"
   port: 59014
+  ssl: 1
 
 crawl:
   root: "https://site4chatgptrnd.shahadathossain.com:59014/"

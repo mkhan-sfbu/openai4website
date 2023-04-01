@@ -8,6 +8,7 @@ RUN pip install -r requirements.txt
 ARG OPENAI_KEY=null
 ARG SERVER_HOST=null
 ARG SERVER_PORT=null
+ARG SERVER_SSL=null
 ARG CRAWL_ROOT=null
 COPY pure-python-version/ /code/
 RUN ls -la /code/*
