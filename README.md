@@ -18,15 +18,15 @@ Also we need to prepare our static website from which OpenAI will find the answe
 
 For this project we have another challenge, we use HTTPS while crawling. So, I need to host it with SSL. Here I use Let’s encrypt free SSL to achieve this. As we using micro-server, we need “standalone” SSL.
 ```
-$ sudo certbot certonly --standalone -d python.site4chatgptrnd.shahadathossain.com
+$ sudo certbot certonly --standalone -d site4chatgptrnd.shahadathossain.com
 ```
 Note: Before execute above code we need to ensure that 80 and 443 port is not bind with the domain.
 
-When it run successfully, it provide all necessary certificate files. In my server the location of those files was “/etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/” Now, we need to copy “cert.pem”, “privkey.pem” and “fullchain.pem” into our “\<project-root\>/pure-python-version/ssl-certificates/” directory. To do this, we can apply following commands -
+When it run successfully, it provide all necessary certificate files. In my server the location of those files was “/etc/letsencrypt/live/site4chatgptrnd.shahadathossain.com/” Now, we need to copy “cert.pem”, “privkey.pem” and “fullchain.pem” into our “\<project-root\>/pure-python-version/ssl-certificates/” directory. To do this, we can apply following commands -
 ```
-$ sudo cp /etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/fullchain.pem pure-python-version/ssl-certificates/
-$ sudo cp /etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/cert.pem pure-python-version/ssl-certificates/
-$ sudo cp /etc/letsencrypt/live/python.site4chatgptrnd.shahadathossain.com/privkey.pem pure-python-version/ssl-certificates/
+$ sudo cp /etc/letsencrypt/live/site4chatgptrnd.shahadathossain.com/fullchain.pem pure-python-version/ssl-certificates/
+$ sudo cp /etc/letsencrypt/live/site4chatgptrnd.shahadathossain.com/cert.pem pure-python-version/ssl-certificates/
+$ sudo cp /etc/letsencrypt/live/site4chatgptrnd.shahadathossain.com/privkey.pem pure-python-version/ssl-certificates/
 ```
 Note: Symbolic-link or hard-link will not work here in Docker.
 
@@ -40,7 +40,7 @@ In Docker build there has several argument we can pass while building image that
 
 To run build docker and run docker you can use these code -
 ```
-$ sudo docker build --build-arg OPENAI_KEY=”secret-api-key” -t openaiusingpurepython .
+$ sudo docker build --build-arg OPENAI_KEY=secret-api-key -t openaiusingpurepython .
 $ sudo docker run -d --name openaiusingpurepython_container --network=host openaiusingpurepython:latest
 ```
 Note: By default, our program will run 59014 port. We can change port while running docker by following argument -
@@ -48,6 +48,11 @@ Note: By default, our program will run 59014 port. We can change port while runn
 $ sudo docker run -d --name openaiusingpurepython_container --network=host openaiusingpurepython:latest 59876
 ```
 Here we run our code with custom port 59876.
+
+Here is another sample by which your code will execute at local server (localhost without SSL) but it get data from remote server -
+```
+$ sudo docker build --build-arg OPENAI_KEY=secret-api-key --build-arg SERVER_HOST=localhost --build-arg SERVER_SSL=0 --build-arg CRAWL_ROOT="https://site4chatgptrnd.shahadathossain.com:59014/" -t openaiusingpurepython .
+```
 
 Please note, we need to allow our port into OS firewall. In ubuntu we can apply following commands -
 ```
@@ -60,4 +65,4 @@ $ sudo docker exec -it openaiusingpurepython_container python ./crawl-and-train.
 ```
 Now we are ready to run see the result! We already build and execute our docker and it will communicate through 59014 port.
 
-## Demo https://python.site4chatgptrnd.shahadathossain.com:59014/
+## Demo https://site4chatgptrnd.shahadathossain.com:59014/
