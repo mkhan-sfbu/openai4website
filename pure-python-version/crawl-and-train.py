@@ -23,6 +23,7 @@ cnfg = config()
 if 'org' in cnfg['openai']:
     openai.organization = cnfg['openai']['org']
 openai.api_key = cnfg['openai']['key']
+print('key: '+cnfg['openai']['key'])
 
 # Regex pattern to match a URL
 HTTP_URL_PATTERN = r'^http[s]*://.+'
@@ -119,6 +120,17 @@ def get_domain_hyperlinks(local_domain, url):
 ################################################################################
 ### Step 4
 ################################################################################
+def shkrHtmlToText(value):
+    nVal=re.sub('&deg;', '', value, flags=re.IGNORECASE)
+    value=re.sub('&ldquo;', '"', nVal, flags=re.IGNORECASE)
+    nVal=re.sub('&rdquo;', '"', value, flags=re.IGNORECASE)
+    value=re.sub('&sect;', '', nVal, flags=re.IGNORECASE)
+    nVal=re.sub('&lsquo;', '\'', value, flags=re.IGNORECASE)
+    value=re.sub('&rsquo;', '\'', nVal, flags=re.IGNORECASE)
+    nVal=re.sub('&mdash;', '-', value, flags=re.IGNORECASE)
+    value=re.sub('&amp;', 'and', nVal, flags=re.IGNORECASE)
+    return re.sub('&nbsp;', ' ', value, flags=re.IGNORECASE)
+
 
 def crawl(url):
     # Parse the URL and get the domain
@@ -155,7 +167,7 @@ def crawl(url):
             # Get the text from the URL using BeautifulSoup
             urlData = requests.get(url).text
             asciiData = ''.join(char for char in urlData if ord(char) < 128)
-            soup = BeautifulSoup(asciiData, "html.parser")
+            soup = BeautifulSoup(shkrHtmlToText(asciiData), "html.parser")
 
             # Get the text but remove the tags
             text = soup.get_text()
@@ -308,17 +320,33 @@ df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
 
 # Note that you may run into rate limit issues depending on how many files you try to embed
 # Please check out our rate limit guide to learn more on how to handle this: https://platform.openai.com/docs/guides/rate-limits
-model_engine = "text-embedding-ada-002"
-def create_embedding(text):
-    encoded_text = text.encode('utf-8')
-    return openai.Embedding.create(model=model_engine, inputs=encoded_text)['data'][0]['embedding']
+def keepAsciiOnly(text):
+    if text is None: return ''
+    try:
+        txt=text.decode('latin-1')
+    except:
+        print('exception on decode, as expected!!!')
+        print(text)
+        return ''
+    txt2rtrn=''.join([i if ((ord(i) >= 32 and ord(i) <= 126) or (ord(i) >= 145 and ord(i) <= 148)) else ' ' for i in txt])
+    for x in txt2rtrn:
+        if ord(x)>148:
+            print('out of range: '+x)
+        # else:
+        #    print('found ordinal: '+x+' - '+str(ord(x)))
+    print('total length: '+str(len(txt2rtrn)))
+    return txt2rtrn
 
 # value_when_true if condition else value_when_false
 # x if x is None else x.encode('utf-8')
 # ''.join(char for char in urlData if ord(char) < 128)
-df['embeddings'] = df.text.apply(lambda x: openai.Embedding.create(input=(x if x is None else x.encode('utf-8').decode()), engine='text-embedding-ada-002')['data'][0]['embedding'])
+df['ascii_only'] = df.text.apply(lambda x: keepAsciiOnly(x.encode('utf-8')))
+
+#print(df.ascii_only)
+
+df['embeddings'] = df.ascii_only.apply(lambda x: openai.Embedding.create(input=x, engine='text-embedding-ada-002')['data'][0]['embedding'])
 df.to_csv('processed/embeddings.csv')
-df.head()
+#df.head()
 
 
 print('Preparation completed...')
