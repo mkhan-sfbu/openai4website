@@ -22,11 +22,12 @@ def getConfigAfterChangingData(cnfg, data2change, cnfgRootKey, cnfgDataKey):
             cnfg[cnfgRootKey][cnfgDataKey]=data2change
         else:
             if isinstance(cnfg[cnfgRootKey][cnfgDataKey], str) or  isinstance(cnfg[cnfgRootKey][cnfgDataKey], int):
-                if isinstance(cnfg[cnfgRootKey][cnfgDataKey], int) and cnfg[cnfgRootKey][cnfgDataKey]!=int(data2change):
-                    data2changeX=data2change
-                    if isinstance(data2change, int): data2changeX=str(data2change)
-                    need2write=True
-                    cnfg[cnfgRootKey][cnfgDataKey]=int(data2changeX)
+                if isinstance(cnfg[cnfgRootKey][cnfgDataKey], int):
+                    if cnfg[cnfgRootKey][cnfgDataKey]!=int(data2change):
+                        data2changeX=data2change
+                        if isinstance(data2change, int): data2changeX=str(data2change)
+                        need2write=True
+                        cnfg[cnfgRootKey][cnfgDataKey]=int(data2changeX)
                 else:
                     if cnfg[cnfgRootKey][cnfgDataKey]!=data2change:
                         need2write=True
@@ -48,7 +49,7 @@ def getConfigAfterChangingData(cnfg, data2change, cnfgRootKey, cnfgDataKey):
                         if dk!=cnfgRootKey: nCnfg[dk]=cnfg[dk]
                     cnfg=nCnfg
             else:
-                raise Exception("Trying to remote string configuration value from a predefined array value, check configuraion YAML file for '"+cnfgRootKey+"' >> '"+cnfgDataKey+"'")
+                raise Exception("Trying to remove string configuration value from a predefined array value, check configuraion YAML file for '"+cnfgRootKey+"' >> '"+cnfgDataKey+"'")
     return [need2write, cnfg]
 
 
